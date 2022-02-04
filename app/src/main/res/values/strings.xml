@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">BlueTooth</string>
+
+    <!-- activity_main.xml -->
+
+    <!-- bottom_nav_menu.xml -->
+    <string name="nav_item_device">设备连接</string>
+    <string name="nav_item_data">查看数据</string>
+
+    <!-- fragment_device.xml -->
+    <string name="frag_device_text1">device fragment</string>
+    <string name="frag_data_text1">data fragment</string>
 </resources>
