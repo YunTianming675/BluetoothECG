@@ -8,6 +8,5 @@
     <string name="nav_item_data">查看数据</string>
 
     <!-- fragment_device.xml -->
-    <string name="frag_device_text1">device fragment</string>
-    <string name="frag_data_text1">data fragment</string>
+    <string name="fragment_device_button1">点击扫描</string>
 </resources>

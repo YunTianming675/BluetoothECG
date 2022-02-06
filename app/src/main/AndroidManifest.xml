@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.bluetooth">
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
@@ -16,9 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BlueTooth">
+        <!-- TODO 当前强制竖屏，因为横屏后按钮会被底部导航栏遮挡，有时间再解决 -->
+        <!-- 强制竖屏会有警告，使用LockedOrientationActivity屏蔽警告 -->
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

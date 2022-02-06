@@ -7,14 +7,21 @@
     android:layout_height="match_parent"
     tools:context="com.example.bluetooth.ui.device.DeviceFragment">
 
-    <TextView
-        android:id="@+id/frag_device_text1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
+    <!-- 如果按钮未能正确显示颜色需要修改主题：
+         <style name="Theme.BlueTooth"
+         parent="Theme.MaterialComponents.DayNight.DarkActionBar.Bridge"> -->
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="#969696"
+        android:contentDescription="@string/fragment_device_button1"
+        android:scaleType="centerInside"
+        android:src="@drawable/scan_devices"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.89" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

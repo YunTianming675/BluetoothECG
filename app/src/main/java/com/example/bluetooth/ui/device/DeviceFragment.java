@@ -25,13 +25,7 @@ public class DeviceFragment extends Fragment {
         deviceViewModel = new ViewModelProvider(this).get(DeviceViewModel.class);
         binding = FragmentDeviceBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        final TextView textView = binding.fragDeviceText1; //fragDeviceText1是fragment_device.xml的TextView的id
-        deviceViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                textView.setText(s);
-            }
-        });
+
         return root;
     }
 

@@ -25,6 +25,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        init();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ENABLE_BT) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "蓝牙已打开", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(this, "打开失败", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
+
+    private void init() {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -44,20 +62,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "蓝牙未打开", Toast.LENGTH_SHORT).show();
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ENABLE_BT) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(this, "蓝牙已打开", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(this, "打开失败", Toast.LENGTH_SHORT).show();
-                finish();
-            }
         }
     }
 }
