@@ -9,4 +9,7 @@
 
     <!-- fragment_device.xml -->
     <string name="fragment_device_button1">点击扫描</string>
+
+    <!-- device_item.xml -->
+    <string name="device_image_description">蓝牙图标</string>
 </resources>
