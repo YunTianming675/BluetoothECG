@@ -18,13 +18,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bluetooth.BluetoothDevice;
+import com.example.bluetooth.BtDevice;
 import com.example.bluetooth.LogUtil;
 import com.example.bluetooth.MyApplication;
 import com.example.bluetooth.R;
-import com.example.bluetooth.adapters.DeviceAdapter;
+import com.example.bluetooth.adapters.BtAdapter;
 import com.example.bluetooth.databinding.FragmentDeviceBinding;
-import com.example.bluetooth.receiver.BluetoothReceiver;
+import com.example.bluetooth.receiver.BtReceiver;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.Set;
 public class DeviceFragment extends Fragment {
 
     private DeviceViewModel deviceViewModel;
-    private BluetoothReceiver bluetoothReceiver;
+    private BtReceiver btReceiver;
     private FragmentDeviceBinding binding;
 
     @Nullable
@@ -47,21 +47,21 @@ public class DeviceFragment extends Fragment {
         //向recyclerView中添加内容
         RecyclerView recyclerView = binding.deviceRecyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(MyApplication.getContext()));
-        List<BluetoothDevice> deviceList = Arrays.asList(
-                new BluetoothDevice("device 01", R.drawable.bluetooth),
-                new BluetoothDevice("device 02", R.drawable.bluetooth),
-                new BluetoothDevice("device 03", R.drawable.bluetooth)
+        List<BtDevice> deviceList = Arrays.asList(
+                new BtDevice("device 01", R.drawable.bluetooth),
+                new BtDevice("device 02", R.drawable.bluetooth),
+                new BtDevice("device 03", R.drawable.bluetooth)
         );
-        DeviceAdapter deviceAdapter = new DeviceAdapter(deviceList);
-        recyclerView.setAdapter(deviceAdapter);
+        BtAdapter btAdapter = new BtAdapter(deviceList);
+        recyclerView.setAdapter(btAdapter);
 
         //注册广播接收蓝牙发现的结果
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED); //蓝牙开始搜索
         intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED); //蓝牙搜索结束
         intentFilter.addAction(android.bluetooth.BluetoothDevice.ACTION_FOUND); //发现未配对设备
-        bluetoothReceiver = new BluetoothReceiver();
-        MyApplication.getContext().registerReceiver(bluetoothReceiver, intentFilter);
+        btReceiver = new BtReceiver();
+        MyApplication.getContext().registerReceiver(btReceiver, intentFilter);
 
         //为imageButton设置监听事件
         ImageButton imageButton = binding.imageButton;
@@ -81,7 +81,7 @@ public class DeviceFragment extends Fragment {
                 }
             }
 
-            //蓝牙扫描
+            //蓝牙扫描，只扫描传统蓝牙
             if (bluetoothAdapter.isDiscovering()) {
                 LogUtil.d("DeviceFragment", "is discovering");
                 bluetoothAdapter.cancelDiscovery();
@@ -102,7 +102,7 @@ public class DeviceFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        MyApplication.getContext().unregisterReceiver(bluetoothReceiver); //注销广播接收器
+        MyApplication.getContext().unregisterReceiver(btReceiver); //注销广播接收器
         LogUtil.d("DeviceFragment", "onDestroyView");
     }
 }

@@ -2,15 +2,19 @@ package com.example.bluetooth;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -18,6 +22,7 @@ import com.example.bluetooth.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private BluetoothAdapter bluetoothAdapter;
     private ActivityMainBinding binding;
     private final int REQUEST_ENABLE_BT = 1;
@@ -64,6 +69,15 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
 
-        LogUtil.d("MainActivity", "init end");
+        // android 6 以上版本的动态获取权限，否则查找不到任何蓝牙设备
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int per = checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+            if (per != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            }
+            LogUtil.d(TAG, "permission code:" + per);
+        }
+
+        LogUtil.d(TAG, "init end");
     }
 }

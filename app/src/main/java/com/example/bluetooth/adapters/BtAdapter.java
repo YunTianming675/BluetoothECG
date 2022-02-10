@@ -9,16 +9,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bluetooth.BluetoothDevice;
+import com.example.bluetooth.BtDevice;
 import com.example.bluetooth.R;
 
 import java.util.List;
 
-public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>{
+public class BtAdapter extends RecyclerView.Adapter<BtAdapter.DeviceViewHolder>{
 
-    private List<BluetoothDevice> deviceList;
+    private List<BtDevice> deviceList;
 
-    public DeviceAdapter(List<BluetoothDevice> deviceList) {
+    public BtAdapter(List<BtDevice> deviceList) {
         this.deviceList = deviceList;
     }
 
@@ -31,9 +31,9 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
 
     @Override
     public void onBindViewHolder(@NonNull DeviceViewHolder holder, int position) {
-        BluetoothDevice bluetoothDevice = deviceList.get(position);
-        holder.getDevice_icon().setImageResource(bluetoothDevice.getIcon());
-        holder.getDevice_name().setText(bluetoothDevice.getName());
+        BtDevice btDevice = deviceList.get(position);
+        holder.getDevice_icon().setImageResource(btDevice.getIcon());
+        holder.getDevice_name().setText(btDevice.getName());
     }
 
     @Override

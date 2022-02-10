@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import com.example.bluetooth.LogUtil;
 
-public class BluetoothReceiver extends BroadcastReceiver {
+public class BtReceiver extends BroadcastReceiver {
 
     private final static String TAG = "BluetoothReceiver";
     @Override

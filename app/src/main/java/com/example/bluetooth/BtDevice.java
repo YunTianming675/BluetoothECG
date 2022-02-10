@@ -1,11 +1,11 @@
 package com.example.bluetooth;
 
-public class BluetoothDevice {
+public class BtDevice {
 
     private String name;
     private int icon;
 
-    public BluetoothDevice(String name, int icon) {
+    public BtDevice(String name, int icon) {
         this.name = name;
         this.icon = icon;
     }
