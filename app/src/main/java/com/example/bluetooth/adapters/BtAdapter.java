@@ -1,5 +1,6 @@
 package com.example.bluetooth.adapters;
 
+import android.bluetooth.BluetoothDevice;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,17 +10,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bluetooth.BtDevice;
+import com.example.bluetooth.LogUtil;
 import com.example.bluetooth.R;
 
 import java.util.List;
 
 public class BtAdapter extends RecyclerView.Adapter<BtAdapter.DeviceViewHolder>{
 
-    private List<BtDevice> deviceList;
+    private static final String TAG = "BtAdapter";
+    private List<BluetoothDevice> deviceList;
 
-    public BtAdapter(List<BtDevice> deviceList) {
+    public BtAdapter(List<BluetoothDevice> deviceList) {
         this.deviceList = deviceList;
+        if (deviceList == null)
+            LogUtil.e(TAG, "deviceList == null");
     }
 
     @NonNull
@@ -31,20 +35,23 @@ public class BtAdapter extends RecyclerView.Adapter<BtAdapter.DeviceViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull DeviceViewHolder holder, int position) {
-        BtDevice btDevice = deviceList.get(position);
-        holder.getDevice_icon().setImageResource(btDevice.getIcon());
-        holder.getDevice_name().setText(btDevice.getName());
+        BluetoothDevice bluetoothDevice = deviceList.get(position);
+        holder.getDevice_icon().setImageResource(R.drawable.bluetooth); // TODO 修改相应的资源图标
+        holder.getDevice_name().setText(bluetoothDevice.getName());
     }
 
     @Override
     public int getItemCount() {
-        return deviceList.size();
+        if (deviceList == null)
+            return 0;
+        else
+            return deviceList.size();
     }
 
-    public class DeviceViewHolder extends RecyclerView.ViewHolder {
+    public static class DeviceViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView device_icon;
-        private TextView device_name;
+        private final ImageView device_icon;
+        private final TextView device_name;
 
         public DeviceViewHolder(@NonNull View itemView) {
             super(itemView);
