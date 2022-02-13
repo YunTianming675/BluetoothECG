@@ -45,7 +45,7 @@ public class DeviceFragment extends Fragment {
         View root = binding.getRoot();
         BluetoothManager bluetoothManager = (BluetoothManager) MyApplication.getContext().getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
-        List<BluetoothDevice> deviceList = new ArrayList<BluetoothDevice>();
+        List<BluetoothDevice> deviceList = new ArrayList<>();
 
         //向recyclerView中添加内容
         RecyclerView recyclerView = binding.deviceRecyclerView;
@@ -64,7 +64,8 @@ public class DeviceFragment extends Fragment {
                     }
                 }
             }
-        BtAdapter btAdapter = new BtAdapter(deviceList);
+        BtAdapter btAdapter = BtAdapter.getBtAdapter();
+        btAdapter.setDeviceList(deviceList);
         recyclerView.setAdapter(btAdapter);
 
         //注册广播接收蓝牙发现的结果
