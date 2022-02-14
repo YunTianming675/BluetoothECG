@@ -20,7 +20,7 @@ public class BtReceiver extends BroadcastReceiver {
         BtAdapter btAdapter = BtAdapter.getBtAdapter();
         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
         if (device != null)
-            LogUtil.i(TAG, "name:" + device.getName() + "address:" + device.getAddress());
+            LogUtil.i(TAG, "name:" + device.getName() + " address:" + device.getAddress());
         switch (action) {
             case BluetoothAdapter.ACTION_DISCOVERY_STARTED:
                 LogUtil.i(TAG, "start found");

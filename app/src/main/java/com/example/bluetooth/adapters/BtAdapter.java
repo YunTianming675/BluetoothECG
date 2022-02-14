@@ -1,6 +1,8 @@
 package com.example.bluetooth.adapters;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +15,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bluetooth.LogUtil;
 import com.example.bluetooth.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class BtAdapter extends RecyclerView.Adapter<BtAdapter.DeviceViewHolder>{
+
+    static final UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     protected List<BluetoothDevice> deviceList = new ArrayList<>();
 
     private static final String TAG = "BtAdapter";
+    private BluetoothSocket bluetoothSocket;
     private final static BtAdapter btAdapter = new BtAdapter();
 
     private BtAdapter() {}
@@ -96,8 +103,36 @@ public class BtAdapter extends RecyclerView.Adapter<BtAdapter.DeviceViewHolder>{
 
         private void onItemClick(int position) {
             BluetoothDevice bluetoothDevice = deviceList.get(position);
+
             LogUtil.d(TAG, "device name = " + bluetoothDevice.getName());
             LogUtil.d(TAG, "device address = " + bluetoothDevice.getAddress());
+
+            try {
+                bluetoothSocket = bluetoothDevice.createInsecureRfcommSocketToServiceRecord(SPP_UUID);
+                new Thread( () -> {
+                    BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+                    try {
+                        LogUtil.d(TAG, "try begin");
+                        bluetoothSocket.connect();
+                        LogUtil.d(TAG, "try end");
+                    }
+                    catch (IOException e) {
+                        LogUtil.e(TAG, "Could not connect");
+                        e.printStackTrace();
+                        try {
+                            bluetoothSocket.close();
+                        }
+                        catch (IOException exception) {
+                            LogUtil.e(TAG, "Could not close");
+                        }
+                    }
+                    LogUtil.d(TAG, "connect status:" + bluetoothSocket.isConnected());
+                }).start();
+            }
+            catch (IOException ioException) {
+                LogUtil.e(TAG, "IOException");
+            }
+            LogUtil.d(TAG, "is connected:" + bluetoothSocket.isConnected());
         }
     }
 }
