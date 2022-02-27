@@ -13,11 +13,13 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.bluetooth.databinding.FragmentDataBinding;
+import com.jjoe64.graphview.GraphView;
 
 public class DataFragment extends Fragment {
 
     private DataViewModel dataViewModel;
     private FragmentDataBinding binding;
+    private GraphView graphView;
 
     @Nullable
     @Override
@@ -27,6 +29,8 @@ public class DataFragment extends Fragment {
         View root = binding.getRoot();
 
         final TextView textView = binding.fragDataText1;
+        graphView = binding.fragDataGraphview;
+
         dataViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
