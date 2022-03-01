@@ -12,6 +12,7 @@
 
     <!-- fragment_data.xml -->
     <string name="frag_button_start">开始</string>
+    <string name="frag_button_end">结束</string>
 
     <!-- device_item.xml -->
     <string name="device_image_description">蓝牙图标</string>

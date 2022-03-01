@@ -7,16 +7,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.bluetooth.ui.data.DataFragment">
 
-    <TextView
-        android:id="@+id/frag_data_text1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
     <com.jjoe64.graphview.GraphView
         android:id="@+id/frag_data_graphview"
         android:layout_width="match_parent"
@@ -31,11 +21,26 @@
         android:layout_height="60dp"
         android:text="@string/frag_button_start"
         android:textAllCaps="false"
+        android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@id/frag_data_graphview"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.05"
         app:layout_constraintHorizontal_bias="0.05"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/frag_button_end"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:text="@string/frag_button_end"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/frag_data_graphview"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/frag_button_start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.5"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
