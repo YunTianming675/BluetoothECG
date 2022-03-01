@@ -27,13 +27,16 @@ public class BtAdapter extends RecyclerView.Adapter<BtAdapter.DeviceViewHolder>{
     protected List<BluetoothDevice> deviceList = new ArrayList<>();
 
     private static final String TAG = "BtAdapter";
-    private BluetoothSocket bluetoothSocket;
     private final static BtAdapter btAdapter = new BtAdapter();
-
+    private BluetoothSocket bluetoothSocket = null;
     private BtAdapter() {}
 
     public static BtAdapter getBtAdapter() {
         return btAdapter;
+    }
+
+    public BluetoothSocket getBluetoothSocket() {
+        return bluetoothSocket;
     }
 
     public void addBluetoothDevice(BluetoothDevice bluetoothDevice) {
