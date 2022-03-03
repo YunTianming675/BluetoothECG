@@ -88,6 +88,7 @@ public class DataFragment extends Fragment {
                         }
                         startFlag = false;
                         logPrintChar(c);
+                        
                     }
                     catch (IOException e) {
                         LogUtil.e(TAG, "Thread IOException error");
