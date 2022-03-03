@@ -74,22 +74,32 @@ public class DataFragment extends Fragment {
             Thread thread = new Thread(() -> {
                 LogUtil.d(TAG, "on Thread");
 
-                char[] c = new char[78];
-                boolean startFlag = false;
+                char receivedChar;
+                String receivedString;
+                char[] c = new char[38];
 
                 while (isRead) {
                     try {
                         DataInputStream inputStream = new DataInputStream(bluetoothSocket.getInputStream());
-                        if (inputStream.readChar() == 0xFF) {
-                            startFlag = true;
+
+                        receivedChar = inputStream.readChar();
+                        receivedString = Integer.toHexString(receivedChar);
+                        LogUtil.d(TAG, "receivedString = " + receivedString);
+
+                        if ((receivedChar & 0xFF00) == 0xFF00) {
+                            LogUtil.d(TAG, "----------------checked 0xFF----------------");
+                            c[0] = receivedChar;
                         }
-                        for (int i = 0; i < c.length && startFlag; i++) {
+                        else {
+                            continue;
+                        }
+                        for (int i = 1; i < c.length; i++) {
                             c[i] = inputStream.readChar();
                         }
-                        startFlag = false;
                         logPrintChar(c);
+                        LogUtil.d(TAG, "--------------------End--------------------");
                     }
-                    catch (IOException e) {
+                    catch (Exception e) {
                         LogUtil.e(TAG, "Thread IOException error");
                         e.printStackTrace();
                     }
@@ -101,6 +111,7 @@ public class DataFragment extends Fragment {
         buttonEnd.setOnClickListener(view -> {
             LogUtil.d(TAG, "on frag_button_end Listener");
             buttonStart.setEnabled(true);
+            isRead = false;
 
             try {
                 DataOutputStream outputStream = new DataOutputStream(bluetoothSocket.getOutputStream());
@@ -116,6 +127,7 @@ public class DataFragment extends Fragment {
 
     public void logPrintChar(char[] ch) {
         StringBuilder res = new StringBuilder();
+        LogUtil.d(TAG, "----------------received data:----------------");
         for (char c:ch) {
             String hex = Integer.toHexString(c);
             if (hex.length() == 1) {
