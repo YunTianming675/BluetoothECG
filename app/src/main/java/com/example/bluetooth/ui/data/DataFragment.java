@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.bluetooth.LogUtil;
+import com.example.bluetooth.RT_PACK;
 import com.example.bluetooth.adapters.BtAdapter;
 import com.example.bluetooth.databinding.FragmentDataBinding;
 import com.jjoe64.graphview.GraphView;
@@ -74,35 +75,22 @@ public class DataFragment extends Fragment {
             Thread thread = new Thread(() -> {
                 LogUtil.d(TAG, "on Thread");
 
-                char receivedChar;
-                String receivedString;
-                char[] c = new char[38];
-
                 while (isRead) {
+                    RT_PACK rt_pack = new RT_PACK();
                     try {
-                        DataInputStream inputStream = new DataInputStream(bluetoothSocket.getInputStream());
-
-                        receivedChar = inputStream.readChar();
-                        receivedString = Integer.toHexString(receivedChar);
-                        LogUtil.d(TAG, "receivedString = " + receivedString);
-
-                        if ((receivedChar & 0xFF00) == 0xFF00) {
-                            LogUtil.d(TAG, "----------------checked 0xFF----------------");
-                            c[0] = receivedChar;
-                        }
-                        else {
-                            continue;
-                        }
-                        for (int i = 1; i < c.length; i++) {
-                            c[i] = inputStream.readChar();
-                        }
-                        logPrintChar(c);
-                        LogUtil.d(TAG, "--------------------End--------------------");
+                        rt_pack.receiveData(new DataInputStream(bluetoothSocket.getInputStream()));
                     }
-                    catch (Exception e) {
-                        LogUtil.e(TAG, "Thread IOException error");
+                    catch (IOException e) {
+                        LogUtil.e(TAG, "bluetoothSocket IOException");
                         e.printStackTrace();
                     }
+                    LogUtil.d(TAG, "HeartData:");
+                    logPrintArray(rt_pack.getHeartData());
+                    LogUtil.d(TAG, "HeartRate:" + Integer.toHexString(rt_pack.getHeartRate()));
+                    LogUtil.d(TAG, "spo2:" + Integer.toHexString(rt_pack.getSpo2()));
+                    LogUtil.d(TAG, "bk:" + Integer.toHexString(rt_pack.getBk()));
+                    LogUtil.d(TAG, "rsv:");
+                    logPrintArray(rt_pack.getRsv());
                 }
             });
             thread.start();
@@ -125,11 +113,23 @@ public class DataFragment extends Fragment {
         });
     }
 
-    public void logPrintChar(char[] ch) {
+    public void logPrintArray(char[] ch) {
         StringBuilder res = new StringBuilder();
-        LogUtil.d(TAG, "----------------received data:----------------");
         for (char c:ch) {
             String hex = Integer.toHexString(c);
+            if (hex.length() == 1) {
+                hex = "0" + hex;
+            }
+            res.append(hex);
+            res.append(" ");
+        }
+        LogUtil.d(TAG, res.toString());
+    }
+
+    public void logPrintArray(byte[] bytes) {
+        StringBuilder res = new StringBuilder();
+        for (byte b:bytes) {
+            String hex = Integer.toHexString(b);
             if (hex.length() == 1) {
                 hex = "0" + hex;
             }

@@ -25,7 +25,6 @@ public class RT_PACK {
     private void receiveDataHead(DataInputStream dataInputStream) {
         try {
             dataHead = dataInputStream.readChar();
-            dataInputStream.close();
             if ((dataHead & 0xFF00) == 0xFF00) {
                 startFlag = true;
                 heartData[0] = (byte) (dataHead & 0x00FF);
@@ -43,7 +42,6 @@ public class RT_PACK {
             for (int i = 1; i < heartData.length; i++) {
                 heartData[i] = dataInputStream.readByte();
             }
-            dataInputStream.close();
         }
         catch (IOException e) {
             LogUtil.e(TAG, "receive heart data IOException");
@@ -54,9 +52,8 @@ public class RT_PACK {
     private void receiveHeartRateAndSpo2(DataInputStream dataInputStream) {
         try {
             heartRate = dataInputStream.readChar();
-            dataInputStream.close();
             spo2 = (char) (heartRate & 0x00FF);
-            heartRate = (char) (heartRate & 0xFF00);
+            heartRate = (char) ((heartRate & 0xFF00) >> 8);
         }
         catch (IOException e) {
             LogUtil.e(TAG, "receive heart rate IOException");
@@ -67,9 +64,8 @@ public class RT_PACK {
     private void receiveBk(DataInputStream dataInputStream) {
         try {
             bk = dataInputStream.readChar();
-            dataInputStream.close();
             rsv[0] = (char) (bk & 0x00FF);
-            bk = (char) (bk & 0xFF00);
+            bk = (char) ((bk & 0xFF00) >> 8);
         }
         catch (IOException e) {
             LogUtil.e(TAG, "receive bk IOException");
@@ -82,11 +78,11 @@ public class RT_PACK {
         try {
             for (int i = 0; i < rsv.length-2; i+=2) {
                 c = dataInputStream.readChar();
-                rsv[i+1] = (char) (c & 0xFF00);
+                rsv[i+1] = (char) ((c & 0xFF00) >> 8);
                 rsv[i+2] = (char) (c & 0x00FF);
             }
             c = dataInputStream.readChar();
-            rsv[rsv.length-1] = (char) (c & 0xFF00);
+            rsv[rsv.length-1] = (char) ((c & 0xFF00) >> 8);
         }
         catch (IOException e) {
             LogUtil.e(TAG, "receive rsv IOException");
