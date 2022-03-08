@@ -17,6 +17,8 @@ import com.example.bluetooth.RT_PACK;
 import com.example.bluetooth.adapters.BtAdapter;
 import com.example.bluetooth.databinding.FragmentDataBinding;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -26,6 +28,8 @@ public class DataFragment extends Fragment {
 
     private final static String TAG = "DataFragment";
     private boolean isRead = false;
+    private int lastXValue = 0;
+    private int circleNum = 0;
 
     private DataViewModel dataViewModel;
     private FragmentDataBinding binding;
@@ -33,6 +37,7 @@ public class DataFragment extends Fragment {
     private AppCompatButton buttonStart;
     private AppCompatButton buttonEnd;
     private BluetoothSocket bluetoothSocket;
+    private final LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
 
     @Nullable
     @Override
@@ -54,6 +59,8 @@ public class DataFragment extends Fragment {
         graphView = binding.fragDataGraphview;
         buttonStart = binding.fragButtonStart;
         buttonEnd = binding.fragButtonEnd;
+
+        graphView.addSeries(series);
 
         buttonStart.setOnClickListener(view -> {
             LogUtil.d(TAG, "on frag_button_start Listener");
@@ -91,6 +98,23 @@ public class DataFragment extends Fragment {
                     LogUtil.d(TAG, "bk:" + Integer.toHexString(rt_pack.getBk()));
                     LogUtil.d(TAG, "rsv:");
                     logPrintArray(rt_pack.getRsv());
+
+                    // 回到主线程更新UI
+                    // TODO 实机测试
+                    graphView.post(() -> {
+                        byte[] bytes = rt_pack.getHeartData();
+                        for (byte b:bytes) {
+                            series.appendData(new DataPoint(lastXValue, b), true, 256);
+                            lastXValue ++;
+                            graphView.onDataChanged(true, true);
+                        }
+                        circleNum ++;
+                        if (circleNum == 3) {
+                            circleNum = 0;
+                            lastXValue = 0;
+                            series.resetData(new DataPoint[]{new DataPoint(lastXValue, bytes[0])});
+                        }
+                    });
                 }
             });
             thread.start();
