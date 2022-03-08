@@ -37,7 +37,7 @@ public class DataFragment extends Fragment {
     private AppCompatButton buttonStart;
     private AppCompatButton buttonEnd;
     private BluetoothSocket bluetoothSocket;
-    private final LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
+    private final LineGraphSeries<DataPoint> series = new LineGraphSeries<>(generateEmptyData());
 
     @Nullable
     @Override
@@ -91,28 +91,26 @@ public class DataFragment extends Fragment {
                         LogUtil.e(TAG, "bluetoothSocket IOException");
                         e.printStackTrace();
                     }
-                    LogUtil.d(TAG, "HeartData:");
-                    logPrintArray(rt_pack.getHeartData());
-                    LogUtil.d(TAG, "HeartRate:" + Integer.toHexString(rt_pack.getHeartRate()));
-                    LogUtil.d(TAG, "spo2:" + Integer.toHexString(rt_pack.getSpo2()));
-                    LogUtil.d(TAG, "bk:" + Integer.toHexString(rt_pack.getBk()));
-                    LogUtil.d(TAG, "rsv:");
-                    logPrintArray(rt_pack.getRsv());
+//                    LogUtil.d(TAG, "HeartData:");
+//                    logPrintArray(rt_pack.getHeartData());
+//                    LogUtil.d(TAG, "HeartRate:" + Integer.toHexString(rt_pack.getHeartRate()));
+//                    LogUtil.d(TAG, "spo2:" + Integer.toHexString(rt_pack.getSpo2()));
+//                    LogUtil.d(TAG, "bk:" + Integer.toHexString(rt_pack.getBk()));
+//                    LogUtil.d(TAG, "rsv:");
+//                    logPrintArray(rt_pack.getRsv());
 
                     // 回到主线程更新UI
                     // TODO 实机测试
                     graphView.post(() -> {
                         byte[] bytes = rt_pack.getHeartData();
                         for (byte b:bytes) {
-                            series.appendData(new DataPoint(lastXValue, b), true, 256);
                             lastXValue ++;
+                            series.appendData(new DataPoint(lastXValue, b), true, 256);
                             graphView.onDataChanged(true, true);
                         }
-                        circleNum ++;
-                        if (circleNum == 3) {
-                            circleNum = 0;
-                            lastXValue = 0;
-                            series.resetData(new DataPoint[]{new DataPoint(lastXValue, bytes[0])});
+                        // 对X轴数据可能溢出的处理
+                        if (lastXValue == Integer.MAX_VALUE) {
+                            series.resetData(generateEmptyData());
                         }
                     });
                 }
@@ -137,29 +135,43 @@ public class DataFragment extends Fragment {
         });
     }
 
-    public void logPrintArray(char[] ch) {
-        StringBuilder res = new StringBuilder();
-        for (char c:ch) {
-            String hex = Integer.toHexString(c);
-            if (hex.length() == 1) {
-                hex = "0" + hex;
-            }
-            res.append(hex);
-            res.append(" ");
-        }
-        LogUtil.d(TAG, res.toString());
-    }
+//    public void logPrintArray(char[] ch) {
+//        StringBuilder res = new StringBuilder();
+//        for (char c:ch) {
+//            String hex = Integer.toHexString(c);
+//            if (hex.length() == 1) {
+//                hex = "0" + hex;
+//            }
+//            res.append(hex);
+//            res.append(" ");
+//        }
+//        LogUtil.d(TAG, res.toString());
+//    }
 
-    public void logPrintArray(byte[] bytes) {
-        StringBuilder res = new StringBuilder();
-        for (byte b:bytes) {
-            String hex = Integer.toHexString(b);
-            if (hex.length() == 1) {
-                hex = "0" + hex;
-            }
-            res.append(hex);
-            res.append(" ");
+//    public void logPrintArray(byte[] bytes) {
+//        StringBuilder res = new StringBuilder();
+//        for (byte b:bytes) {
+//            String hex = Integer.toHexString(b);
+//            if (hex.length() == 1) {
+//                hex = "0" + hex;
+//            }
+//            res.append(hex);
+//            res.append(" ");
+//        }
+//        LogUtil.d(TAG, res.toString());
+//    }
+
+    public DataPoint[] generateEmptyData() {
+        int count = 128;
+        DataPoint[] dataPoints = new DataPoint[count];
+        for (int i = 2; i < count; i++) {
+            DataPoint point = new DataPoint(i, 0);
+            dataPoints[i] = point;
         }
-        LogUtil.d(TAG, res.toString());
+        dataPoints[0] = new DataPoint(0, 127);
+        dataPoints[1] = new DataPoint(1, -127);
+        lastXValue = 127;
+
+        return dataPoints;
     }
 }
