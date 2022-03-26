@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bluetooth.LogUtil;
+import com.example.bluetooth.MyApplication;
 import com.example.bluetooth.R;
 
 import java.io.IOException;
@@ -136,6 +138,8 @@ public class BtAdapter extends RecyclerView.Adapter<BtAdapter.DeviceViewHolder>{
                 LogUtil.e(TAG, "IOException");
             }
             LogUtil.d(TAG, "is connected:" + bluetoothSocket.isConnected());
+            Toast.makeText(MyApplication.getContext(),
+                    "与 " + bluetoothDevice.getName() + " 建立连接", Toast.LENGTH_SHORT).show();
         }
     }
 }

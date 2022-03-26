@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -36,6 +37,10 @@ public class DataFragment extends Fragment {
     private GraphView graphView;
     private AppCompatButton buttonStart;
     private AppCompatButton buttonEnd;
+    private AppCompatTextView textHeartRate;
+    private AppCompatTextView textSpo2;
+    private AppCompatTextView textBps;
+    private AppCompatTextView textDps;
     private BluetoothSocket bluetoothSocket;
     private final LineGraphSeries<DataPoint> series = new LineGraphSeries<>(generateEmptyData());
 
@@ -59,6 +64,10 @@ public class DataFragment extends Fragment {
         graphView = binding.fragDataGraphview;
         buttonStart = binding.fragButtonStart;
         buttonEnd = binding.fragButtonEnd;
+        textHeartRate = binding.fragTextHeart;
+        textSpo2 = binding.fragTextSpo2;
+        textBps = binding.fragTextBps;
+        textDps = binding.fragTextDps;
 
         graphView.addSeries(series);
 
@@ -100,7 +109,6 @@ public class DataFragment extends Fragment {
 //                    logPrintArray(rt_pack.getRsv());
 
                     // 回到主线程更新UI
-                    // TODO 实机测试
                     graphView.post(() -> {
                         byte[] bytes = rt_pack.getHeartData();
                         for (byte b:bytes) {
@@ -112,6 +120,14 @@ public class DataFragment extends Fragment {
                         if (lastXValue == Integer.MAX_VALUE) {
                             series.resetData(generateEmptyData());
                         }
+                        int a = rt_pack.getHeartRate();
+                        textHeartRate.setText(String.valueOf(a));
+                        a = rt_pack.getSpo2();
+                        textSpo2.setText(String.valueOf(a));
+                        a = rt_pack.getRsv()[3];
+                        textBps.setText(String.valueOf(a));
+                        a = rt_pack.getRsv()[4];
+                        textDps.setText(String.valueOf(a));
                     });
                 }
             });
@@ -132,6 +148,10 @@ public class DataFragment extends Fragment {
                 LogUtil.e(TAG, "IOException");
                 e.printStackTrace();
             }
+            textHeartRate.setText("");
+            textSpo2.setText("");
+            textBps.setText("");
+            textDps.setText("");
         });
     }
 

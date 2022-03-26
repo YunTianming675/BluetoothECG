@@ -13,6 +13,10 @@
     <!-- fragment_data.xml -->
     <string name="frag_button_start">开始</string>
     <string name="frag_button_end">结束</string>
+    <string name="frag_linear_layout_text1">心率：</string>
+    <string name="frag_linear_layout_text2">血氧：</string>
+    <string name="frag_linear_layout_text3">收缩压：</string>
+    <string name="frag_linear_layout_text4">舒张压：</string>
 
     <!-- device_item.xml -->
     <string name="device_image_description">蓝牙图标</string>
